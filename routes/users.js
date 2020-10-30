@@ -73,6 +73,7 @@ router.get('/upload', function (req, res, next) {
                   const finalObj = [];
                   for (const value of original) {
                         const yeah = value.split('/')[7];
+                        console.log('yeah', yeah);
                         for (const data of thumbnail) {
                               if (yeah.charAt(0) === data.split('/')[7].charAt(0)) {
                                     const obj = {
