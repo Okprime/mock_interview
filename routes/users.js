@@ -2,39 +2,44 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
-const imageThumbnail = require('image-thumbnail');
+const fs = require('fs');
+
+const uploadDir = `${__dirname}/uploads`;
+console.log('upload directory', uploadDir);
+
+if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
+}
 
 const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-            cb(null, 'uploads');
+            cb(null, uploadDir);
       },
       filename: (req, file, cb) => {
-            console.log(file);
-            cb(null, file.fieldname + '-' + Date.now())
+            cb(null, `${file.originalname}`)
       }
 });
 
 const fileFilter = (req, file, cb) => {
-      if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
             cb(null, true);
       } else {
             cb(null, false);
       }
 };
 
-
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-router.post('/upload', upload.single('avatar'), function (req, res, next) {
+router.post('/upload', upload.single('image'), function (req, res, next) {
       console.log('req.body', req.file);
       // validate the upload
-      if (req.file === undefined) {
-            res.send({
+      if (!req.file) {
+            res.status(400).send({
                   code: 400,
-                  message: 'no file passed'
+                  message: 'no data passed'
             })
       } else {
-            sharp(req.file.path).resize(200, 200).toFile('uploads/' + 'thumbnails-' + req.file.originalname, (err, resizeImage) => {
+            sharp(req.file.path).resize(100, 100).toFile(`${uploadDir}/${req.file.originalname}.t`, (err, resizeImage) => {
                   if (err) {
                         console.log(err);
                   } else {
@@ -44,9 +49,46 @@ router.post('/upload', upload.single('avatar'), function (req, res, next) {
             res.send({
                   code: 200,
                   message: 'file uploaded successfully',
-                  image: req.file.originalname
+                  image: req.file.path,
             })
       }
+});
+
+router.get('/upload', function (req, res, next) {
+            fs.readdir(uploadDir, function(err, filenames) {
+                  if (err) {
+                        console.log(err);
+                        return;
+                  }
+                  const thumbnail = [];
+                  const original = [];
+                  filenames.forEach(function(filename) {
+                        if (filename.endsWith('t')) {
+                              console.log('filename', filename);
+                              thumbnail.push(`${uploadDir}/${filename}`)
+                        } else {
+                              original.push(`${uploadDir}/${filename}`)
+                        }
+                  });
+                  const finalObj = [];
+                  for (const value of original) {
+                        const yeah = value.split('/')[7];
+                        for (const data of thumbnail) {
+                              if (yeah.charAt(0) === data.split('/')[7].charAt(0)) {
+                                    const obj = {
+                                          original: value,
+                                          thumbnail: data
+                                    };
+                                    finalObj.push(obj)
+                              }
+                        }
+                  }
+                  console.log('finalObj', finalObj);
+                  res.send({
+                        message: 'Data successfully fetched',
+                        data: finalObj
+                  })
+            });
 });
 
 module.exports = router;

@@ -1,1 +1,7 @@
 node_modules
+mock.iml
+views
+temp
+package-lock.json
+.idea
+public
