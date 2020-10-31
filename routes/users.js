@@ -3,13 +3,13 @@ const router = express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
-const path = require("path");
 
 const uploadDir = `${process.cwd()}/public/images`;
 console.log('uploadDir', uploadDir);
-// if (!fs.existsSync(uploadDir)) {
-//       fs.mkdirSync(uploadDir);
-// }
+
+if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
+}
 
 const storage = multer.diskStorage({
       destination: (req, file, cb) => {
@@ -19,16 +19,16 @@ const storage = multer.diskStorage({
             cb(null, `${file.originalname}`)
       }
 });
-//
-// const fileFilter = (req, file, cb) => {
-//       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-//             cb(null, true);
-//       } else {
-//             cb(null, false);
-//       }
-// };
 
-const upload = multer({ storage: storage});
+const fileFilter = (req, file, cb) => {
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true);
+      } else {
+            cb(null, false);
+      }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post('/upload', upload.single('image'), function (req, res, next) {
       console.log('req.body', req.file);
