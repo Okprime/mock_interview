@@ -48,15 +48,24 @@ router.post('/upload', upload.single('image'), function (req, res, next) {
                         console.log('resizeImage', resizeImage);
                   }
             });
+
+            // return the original image and thumbnail back to the browser
+            const data = {
+                  original: `${req.headers.host}/${req.file.originalname}`,
+                  thumbnail: `${req.headers.host}/t${req.file.originalname}`
+            };
             res.send({
                   code: 200,
                   message: 'file uploaded successfully',
-                  image: req.file.path,
+                  data
             })
       }
 });
 
 router.get('/upload', function (req, res, next) {
+      console.log('req', req.headers);
+      const url = `${req.headers.host}`;
+      console.log('url', url);
             fs.readdir(uploadDir, function(err, filenames) {
                   if (err) {
                         console.log(err);
@@ -67,18 +76,19 @@ router.get('/upload', function (req, res, next) {
                   filenames.forEach(function(filename) {
                         if (filename.startsWith('t')) {
                               console.log('filename', filename);
-                              thumbnail.push(`${uploadDir}/${filename}`)
+                              thumbnail.push(`${req.headers.host}/${filename}`)
                         } else {
-                              original.push(`${uploadDir}/${filename}`)
+                              original.push(`${req.headers.host}/${filename}`)
                         }
                   });
                   console.log('original', original);
                   console.log('thumbnail', thumbnail);
                   const finalObj = [];
                   for (const value of original) {
-                        const result = value.split('/')[4];
+                        const result = value.split('/')[1];
                         for (const data of thumbnail) {
-                              const fileName = data.split('/')[4];
+                              const fileName = data.split('/')[1];
+                              // get the first character of each string and make comparison
                               if (result.charAt(0) === fileName.substring(1).charAt(0)) {
                                     const obj = {
                                           original: value,
