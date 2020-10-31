@@ -85,9 +85,9 @@ router.get('/upload', function (req, res, next) {
                   console.log('thumbnail', thumbnail);
                   const finalObj = [];
                   for (const value of original) {
-                        const result = value.split('/')[1];
+                        const result = value.split('/')[3];
                         for (const data of thumbnail) {
-                              const fileName = data.split('/')[1];
+                              const fileName = data.split('/')[3];
                               // get the first character of each string and make comparison
                               if (result.charAt(0) === fileName.substring(1).charAt(0)) {
                                     const obj = {
