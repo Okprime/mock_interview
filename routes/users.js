@@ -7,9 +7,9 @@ const path = require("path");
 
 const uploadDir = `${process.cwd()}/public/images`;
 console.log('uploadDir', uploadDir);
-if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-}
+// if (!fs.existsSync(uploadDir)) {
+//       fs.mkdirSync(uploadDir);
+// }
 
 const storage = multer.diskStorage({
       destination: (req, file, cb) => {
