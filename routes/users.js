@@ -7,7 +7,6 @@ const fs = require('fs');
 const uploadDir = `${process.cwd()}/public/images`;
 console.log('uploadDir', uploadDir);
 
-
 if (!fs.existsSync(uploadDir)) {
       console.log('!fs.existsSync(uploadDir)', !fs.existsSync(uploadDir));
       fs.mkdirSync(uploadDir);
