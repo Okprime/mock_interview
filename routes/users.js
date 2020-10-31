@@ -70,6 +70,8 @@ router.get('/upload', function (req, res, next) {
                               original.push(`${uploadDir}/${filename}`)
                         }
                   });
+                  console.log('original', original);
+                  console.log('thumbnail', thumbnail);
                   const finalObj = [];
                   for (const value of original) {
                         const yeah = value.split('/')[7];
