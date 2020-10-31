@@ -51,8 +51,8 @@ router.post('/upload', upload.single('image'), function (req, res, next) {
 
             // return the original image and thumbnail back to the browser
             const data = {
-                  original: `${req.headers.host}/${req.file.originalname}`,
-                  thumbnail: `${req.headers.host}/t${req.file.originalname}`
+                  original: `https://${req.headers.host}/${req.file.originalname}`,
+                  thumbnail: `https://${req.headers.host}/t${req.file.originalname}`
             };
             res.send({
                   code: 200,
@@ -76,9 +76,9 @@ router.get('/upload', function (req, res, next) {
                   filenames.forEach(function(filename) {
                         if (filename.startsWith('t')) {
                               console.log('filename', filename);
-                              thumbnail.push(`${req.headers.host}/${filename}`)
+                              thumbnail.push(`https://${req.headers.host}/${filename}`)
                         } else {
-                              original.push(`${req.headers.host}/${filename}`)
+                              original.push(`https://${req.headers.host}/${filename}`)
                         }
                   });
                   console.log('original', original);
