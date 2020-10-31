@@ -18,16 +18,16 @@ const storage = multer.diskStorage({
             cb(null, `${file.originalname}`)
       }
 });
+//
+// const fileFilter = (req, file, cb) => {
+//       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+//             cb(null, true);
+//       } else {
+//             cb(null, false);
+//       }
+// };
 
-const fileFilter = (req, file, cb) => {
-      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-            cb(null, true);
-      } else {
-            cb(null, false);
-      }
-};
-
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage});
 
 router.post('/upload', upload.single('image'), function (req, res, next) {
       console.log('req.body', req.file);
