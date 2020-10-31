@@ -4,7 +4,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-// const serveIndex = require('serve-index');
 
 const usersRouter = require('./routes/users');
 
@@ -20,8 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(`${process.cwd()}/public/images`)));
-// app.use(express.static('public'), serveIndex('public', {'icons': true}));
-
 
 app.use(usersRouter);
 
