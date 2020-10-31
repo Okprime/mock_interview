@@ -4,9 +4,6 @@ const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
 
-// Request(uri).pipe(fs.createWriteStream(__dirname+'/public/images/'+filename)).on('close', callback);
-
-
 const uploadDir = `${process.cwd()}/public/images`;
 console.log('uploadDir', uploadDir);
 
@@ -44,7 +41,7 @@ router.post('/upload', upload.single('image'), function (req, res, next) {
                   message: 'no data passed'
             })
       } else {
-            sharp(req.file.path).resize(100, 100).toFile(`${uploadDir}/${req.file.originalname}.t`, (err, resizeImage) => {
+            sharp(req.file.path).resize(100, 100).toFile(`${uploadDir}/t${req.file.originalname}`, (err, resizeImage) => {
                   if (err) {
                         console.log(err);
                   } else {
@@ -68,7 +65,7 @@ router.get('/upload', function (req, res, next) {
                   const thumbnail = [];
                   const original = [];
                   filenames.forEach(function(filename) {
-                        if (filename.endsWith('t')) {
+                        if (filename.startsWith('t')) {
                               console.log('filename', filename);
                               thumbnail.push(`${uploadDir}/${filename}`)
                         } else {
@@ -80,9 +77,9 @@ router.get('/upload', function (req, res, next) {
                   const finalObj = [];
                   for (const value of original) {
                         const result = value.split('/')[4];
-                        console.log('result', result);
                         for (const data of thumbnail) {
-                              if (result.charAt(0) === data.split('/')[4].charAt(0)) {
+                              const fileName = data.split('/')[4];
+                              if (result.charAt(0) === fileName.substring(1).charAt(0)) {
                                     const obj = {
                                           original: value,
                                           thumbnail: data
