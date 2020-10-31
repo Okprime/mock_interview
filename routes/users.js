@@ -7,7 +7,7 @@ const fs = require('fs');
 // Request(uri).pipe(fs.createWriteStream(__dirname+'/public/images/'+filename)).on('close', callback);
 
 
-const uploadDir = `${__dirname}/public/images/`;
+const uploadDir = `${process.cwd()}/public/images`;
 console.log('uploadDir', uploadDir);
 
 
