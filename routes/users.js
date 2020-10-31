@@ -74,10 +74,10 @@ router.get('/upload', function (req, res, next) {
                   console.log('thumbnail', thumbnail);
                   const finalObj = [];
                   for (const value of original) {
-                        const yeah = value.split('/')[7];
-                        console.log('yeah', yeah);
+                        const result = value.split('/')[4];
+                        console.log('result', result);
                         for (const data of thumbnail) {
-                              if (yeah.charAt(0) === data.split('/')[7].charAt(0)) {
+                              if (result.charAt(0) === data.split('/')[4].charAt(0)) {
                                     const obj = {
                                           original: value,
                                           thumbnail: data
